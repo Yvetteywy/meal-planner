@@ -1,0 +1,66 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Next.js build output
+.next/
+out/
+
+# Cache
+.cache/
+.eslintcache
+.turbo/
+
+# Environment variables — never commit secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Misc
+.DS_Store
+Thumbs.db
+*.pem
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE / editor workspace files
+.vs/
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Test artifacts
+test-results/
+playwright-report/
+coverage/
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# PWA generated files
+public/sw.js
+public/sw.js.map
+public/workbox-*.js
+public/workbox-*.js.map
+public/worker-*.js
+public/worker-*.js.map
+
+# Capacitor Android project (generated)
+#android/
+
+# Static export output
+out/
+
+# Capacitor iOS export
+.ios-web/
+
+# Build script backups
+next.config.js.bak
+src/i18n.ts.bak
