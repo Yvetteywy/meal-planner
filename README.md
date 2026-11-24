@@ -39,9 +39,12 @@ npm run build        # production build (includes PWA service worker)
 npm run start        # serve production build locally
 ```
 
-The Capacitor Android project is checked in under `android/`. See the [Android build guide](./docs/android-build.md) for SDK setup, APK assembly, and known issues. This is separate from the installable web PWA.
+## Install on a phone for testing
 
-For the interim Capacitor iOS app, see the [iOS app implementation plan](./docs/ios-implementation-plan.md#build-and-run-locally) for Simulator setup and current status.
+These Capacitor installs are separate from the browser PWA. Run npm commands from the repository root, starting with `npm ci` on a fresh checkout.
+
+- **iPhone (Mac + Xcode):** Run `npm run build:ios` and `npm run open:ios`. In Xcode, select your development team and connected iPhone, then click **Run**. See the [iPhone setup guide](./docs/ios-implementation-plan.md#install-on-a-physical-iphone) for signing, first-launch troubleshooting, and updates.
+- **Android:** With the [Android prerequisites](./docs/android-build.md#prerequisites) installed, use a clean or disposable checkout. Run `npm run build:android`, then `npm run open:android` and click **Run** in Android Studio with your phone or emulator selected. See the [Android build guide](./docs/android-build.md#build-a-debug-apk) for APK installation and known blockers.
 
 ## Documentation
 

@@ -257,7 +257,7 @@ Provide reports and visualizations of past meal data so users can understand the
 
 ## 8. Multi-Platform Distribution
 
-**Status:** PWA implemented ✅ · Desktop/iOS wrappers planned
+**Status:** PWA implemented · Capacitor mobile projects checked in · Desktop wrapper planned
 
 The app supports multiple distribution channels from a single codebase:
 
@@ -266,10 +266,10 @@ The app supports multiple distribution channels from a single codebase:
 | **Web** | Next.js | ✅ Done | Default — deploy to Vercel, Netlify, or any host |
 | **PWA** | next-pwa | ✅ Done | Installable from browser on iOS, Android, desktop |
 | **Windows** | Electron or Tauri | 🔮 Planned | Wraps web build into `.exe` installer |
-| **iOS** | Capacitor | 🔮 Planned | Wraps web build into native app (requires Mac for `.ipa` build) |
-| **Android** | Capacitor | ✅ Done | `npm run build:android` → static export + Capacitor sync |
+| **iOS** | Capacitor | Signed iPhone install and process startup confirmed | [Device workflows and TestFlight are pending](ios-implementation-plan.md) |
+| **Android** | Capacitor | Export and sync verified; APK not yet verified | [APK assembly, recipe routing fixes, and device tests are pending](android-build.md) |
 
-**Architecture:** All platforms consume the same static web build output. Platform-specific config lives in `platforms/` directories, keeping `src/` untouched.
+**Architecture:** The platforms share web source, not build output. The web/PWA uses a Next.js production build. iOS exports to `.ios-web/` and Android exports to `out/` before syncing their respective Capacitor projects.
 
 **PWA capabilities (current):**
 - Offline caching via service worker (Workbox)
@@ -277,12 +277,7 @@ The app supports multiple distribution channels from a single codebase:
 - Standalone display mode (no browser chrome)
 - All data persisted in localStorage
 
-**Future platform scripts:**
-```bash
-npm run build          # web + PWA (current)
-npm run build:windows  # Electron wrapper (planned)
-npm run build:ios      # Capacitor wrapper (planned)
-```
+**Build commands:** `npm run build` builds the web/PWA. `npm run build:ios` and `npm run build:android` export and sync their respective projects. Xcode and Gradle compile the apps. A desktop build script is not implemented.
 
 **As a** user, **I want to** see which recipes I cook most often, **so that** I can identify my favorites and try new things.
 

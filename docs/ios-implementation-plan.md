@@ -1,6 +1,6 @@
 # iOS App Implementation Plan
 
-**Status (2026-11-20):** The Capacitor iOS project, isolated export, and fixed recipe routes are implemented. An unsigned build compiled and launched on the iPhone 18 Pro Simulator (iOS 27.2), and the main recipe and meal-plan workflows passed in its WebView. Physical-device and release checks are still pending. Safari PWA installation is separate.
+**Status (2026-11-23):** The Capacitor iOS project, isolated export, and fixed recipe routes are implemented. An unsigned build compiled and launched on the iPhone 18 Pro Simulator (iOS 27.2), and the main recipe and meal-plan workflows passed in its WebView. A signed build was installed directly on an iPhone SE (iOS 26.7.3), and the app process was later confirmed running. Physical-device workflows and release checks are still pending. Safari PWA installation is separate.
 
 ## Stage 1: Interim iOS release (Capacitor)
 
@@ -18,6 +18,19 @@ npm run open:ios
 
 In Xcode, choose the **App** scheme and an iPhone simulator, then press **⌘R**. Xcode 27 opens the simulator in **Device Hub**; reopen it from **Xcode → Open Developer Tool → Device Hub**. `build:ios` exports and syncs assets, but does not compile the native app. Re-run it after web changes; the native project is already present, so do not run `cap add ios` again.
 
+## Install on a physical iPhone
+
+1. In Terminal on your Mac, run the [build commands above](#build-and-run-locally) from the repository root. Skip `npm ci` if dependencies are already installed and unchanged.
+2. Connect and unlock the iPhone. Trust the Mac if prompted. If Developer Mode is off, turn it on under **Settings → Privacy & Security → Developer Mode**, restart, and confirm after unlocking.
+3. In Xcode, add your Apple Account under **Xcode → Settings → Accounts**. Select the **App** target → **Signing & Capabilities**, enable **Automatically manage signing**, and choose your team. A Personal Team works for local testing. If the shared bundle ID is unavailable, choose a unique development bundle ID. Keep personal signing changes out of Git.
+4. Select the **App** scheme and choose your connected iPhone under **Product → Destination**. Click **Run** or press **⌘R on the Mac**. No `.ipa` export is needed.
+
+If signing says the team has no devices, confirm Developer Mode is on, select the physical iPhone (not **Any iOS Device** or a simulator), wait for Xcode to prepare it, and retry signing. **Build Succeeded** does not confirm installation or launch. If the app is missing, check Xcode’s **Report navigator (⌘9)**. As a fallback, `xcrun devicectl device install app --device '<iPhone name>' '<absolute path to signed App.app>'` installs an already-signed device build but does not bypass developer trust.
+
+If the phone reports an untrusted developer, open **Settings → General → VPN & Device Management**, select your identity under **Developer App**, and follow the trust prompts. Restart if requested, then open **Meal Planner** on the phone.
+
+**Update a test build:** After web changes, rerun `npm run build:ios`, then click **Run** in Xcode. For native-only changes, just click **Run**. Use the same bundle ID and leave the app installed to preserve local data. Safari/PWA data does not transfer automatically.
+
 ## Keep the targets separate
 
 | Area | Plan |
@@ -32,7 +45,7 @@ In Xcode, choose the **App** scheme and an iPhone simulator, then press **⌘R**
 ### 1. Bootstrap the iOS target
 
 - [x] Verified Capacitor 8.3.0 with Xcode 27.2 and confirmed the project deployment target (iOS 15). The current bundle ID is `com.mealplanner.app`.
-- [ ] Confirm bundle ID ownership and the signing team before device distribution.
+- [ ] Confirm bundle ID ownership and the signing team before TestFlight or App Store distribution.
 - [x] Add `@capacitor/ios` at the version compatible with the existing Capacitor packages, update the lockfile, and generate the Xcode project under `ios/`.
 - [x] Add the isolated export and sync workflow. Exclude `.env` files and generated PWA service worker artifacts from staging and the bundle. Leave `server.url` unset so the app launches local assets. Do not put secrets in public build-time environment variables.
 - [x] Verified `npm ci` and `build:ios` in a disposable clean copy. A forced compile failure skipped sync and left the prior bundle intact. Both runs preserved the web config/cache and Android project and output. A previous web build’s generated PWA workers did not enter the iOS bundle.
@@ -50,7 +63,8 @@ In Xcode, choose the **App** scheme and an iPhone simulator, then press **⌘R**
 
 - [x] Compile, install, and launch the unsigned iOS bundle on an iPhone 18 Pro Simulator. The generated Capacitor template crashed on iOS 27 without UIKit scene adoption; the iOS shell now uses `UIWindowScene`.
 - [x] Test the exported bundle in the Simulator WebView, with no live-reload server. Create, open, edit, version, and cook a recipe. Cook from a planned meal with a different serving count, verify pantry deduction and shopping-list generation, and confirm data survives a process restart.
-- [ ] Repeat the core flow with the device explicitly offline; verify manual scrolling and keyboard interaction.
+- [x] Build with local development signing and install directly on an iPhone SE. The first launch returned a security error; the app process was later confirmed running. This does not verify installation via Xcode Run or the on-device UI.
+- [ ] Verify startup in Airplane Mode. On the iPhone, create and edit a recipe, cook from the meal plan, verify pantry deduction and shopping lists, and force-quit and relaunch to check persistence.
 - [ ] On an iPhone, verify JSON backup export and import through Files, safe areas, keyboard behavior, and cooking timer behavior when backgrounded. Add an iOS-only file/share adapter if needed; keep the backup format compatible with the web app. Verify that import replaces the collections present in the file rather than merging them. Safari/PWA data does not transfer automatically.
 - [x] Run the existing web checks and production build: 131 unit tests and 16 browser tests passed on Node 22. Confirmed the production server serves the hosted-style recipe URL and the PWA service worker. Verified the iOS export leaves Android files unchanged; Android device testing is out of scope.
 

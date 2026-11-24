@@ -87,6 +87,10 @@ npm start              # serve production build locally
 
 The production build generates a service worker (`public/sw.js`) that enables offline caching and PWA installation. The service worker is disabled in development mode.
 
+### Build the iOS app
+
+On a Mac, run `npm run build:ios` to export and sync assets, then `npm run open:ios`. Follow the [iPhone setup guide](docs/ios-implementation-plan.md#install-on-a-physical-iphone) for signing, installation, and verification status.
+
 ### Build the Android app
 
 The Capacitor project is checked in under `android/`. `npm run build:android` exports and syncs web assets; Gradle assembles the APK separately. See the [Android build guide](docs/android-build.md) for prerequisites, exact commands, and current blockers.
@@ -106,6 +110,7 @@ meal-planner/
 ├── INSTRUCTIONS.md          ← You are here
 ├── README.md
 ├── android/                 ← Checked-in Capacitor Android project
+├── ios/                     ← Checked-in Capacitor iOS project
 ├── .env.example             ← Template for environment variables
 ├── .gitignore
 ├── next.config.js
@@ -212,13 +217,15 @@ The UI components are **data-layer agnostic** — they only depend on the `types
 - [ ] **Generate shopping list from meal plan** — diff planned ingredients against inventory.
 - [ ] **AI recipe Route Handler** — wire up the OpenAI API call server-side.
 - [ ] **Recipe CRUD** — add, edit, and delete custom recipes.
-- [ ] **Interim packaged iOS app (Capacitor)** — get the existing web app onto iPhone; see the [iOS implementation plan](docs/ios-implementation-plan.md).
+- [x] **Installable web PWA** — manifest and service worker implemented.
+- [x] **Interim iOS app (Capacitor)** — Simulator workflows verified; signed build installed and app process confirmed running on an iPhone SE.
+- [ ] **iOS device and release verification** — complete [physical-device smoke checks and TestFlight preparation](docs/ios-implementation-plan.md#3-verify-on-simulator-and-iphone).
+- [ ] **Packaged Android verification** — [fix recipe routing, isolate the export, and assemble and test an APK](docs/android-build.md#known-issues-and-next-fixes).
 
 ### Medium-term
 
 - [ ] **User accounts & cloud sync** — Supabase or similar.
 - [ ] **Nutrition data** — calories, macros per serving (OpenFoodFacts API).
-- [ ] **PWA / installable** — `next-pwa` plugin so the site works offline and installs on iOS home screen.
 
 ### Future
 

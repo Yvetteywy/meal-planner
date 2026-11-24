@@ -25,6 +25,8 @@ npm run build:android
 
 `build:android` exports the web app to `out/` and runs `cap sync android`. Sync copies assets to `android/app/src/main/assets/public/` and regenerates integration files. It does **not** assemble an APK. Gradle writes the debug-signed APK to `android/app/build/outputs/apk/debug/app-debug.apk`.
 
+For a physical phone, enable **USB debugging** under **Developer options**, connect and unlock the phone, and approve the USB debugging prompt. Confirm it appears as `device` in `adb devices`.
+
 Install on a connected device or running emulator with `adb install -r android/app/build/outputs/apk/debug/app-debug.apk`, or run `npm run open:android` from the root after sync and use **Run** in Android Studio. Re-run the export/sync after changing the web app.
 
 For distribution, configure release signing separately and generate a signed APK or App Bundle in Android Studio. Keep the keystore and credentials out of Git. The `apksigner` setting in `capacitor.config.ts` selects a signing tool; it does not configure a signing identity.
